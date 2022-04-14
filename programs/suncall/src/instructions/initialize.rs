@@ -68,13 +68,11 @@ impl<'info> Initialize<'info> {
 
 pub fn handler(ctx: Context<Initialize>) -> Result<()> {
     let owner_pubkey = ctx.accounts.owner.key();
-    let state_pubkey = ctx.accounts.lotto_state.key();
     let yi_underlying_mint_pubkey = ctx.accounts.yi_underlying_mint.key();
     let yi_mint_pubkey = ctx.accounts.yi_mint.key();
 
     let lotto = &mut ctx.accounts.lotto;
     lotto.owner = owner_pubkey;
-    lotto.state = state_pubkey;
     lotto.yi_underlying_mint = yi_underlying_mint_pubkey;
     lotto.yi_mint = yi_mint_pubkey;
 
