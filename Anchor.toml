@@ -1,0 +1,43 @@
+[features]
+seeds = true 
+[programs.localnet]
+suncall = "GaGdcADMhbCFCigsyMTRLUj2P876wCD1RqDCNvLrE7fh"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "/Users/armariya/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.spec.ts"
+
+[test.validator]
+url = "https://api.devnet.solana.com"
+
+# Quarry program
+[[test.validator.clone]]
+address = "QMMD16kjauP5knBwxNUJRZ1Z5o3deBuFrqVjBVmmqto" # MergeMine
+[[test.validator.clone]]
+address = "QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB" # Mine
+[[test.validator.clone]]
+address = "QMWoBmAyJLAsA1Lh9ugMTw2gciTihncciphzdNzdZYV" # MineWrapper
+[[test.validator.clone]]
+address = "QoP6NfrQbaGnccXQrMLUkog2tQZ4C1RFgJcwDnT8Kmz" # Operator
+[[test.validator.clone]]
+address = "QRDxhMw1P2NEfiw5mYXG79bwfgHTdasY2xNP76XSea9" # Redeemer
+[[test.validator.clone]]
+address = "QREGBnEj9Sa5uR91AV8u3FxThgP5ZCvdZUW2bHAkfNc" # Registry
+
+# Soluna
+[[test.validator.clone]]
+address = "5fjG31cbSszE6FodW37UJnNzgVTyqg5WHWGCmL3ayAvA" # solUST
+[[test.validator.clone]]
+address = "6XyygxFmUeemaTvA9E9mhH9FvgpynZqARVyG3gUdCMt7" # staked solUST
+[[test.validator.clone]]
+address = "SLNAAQ8VT6DRDc3W9UPDjFyRt7u4mzh8Z4WYMDjJc35" # SLNA
+
+# CrateProtocol/yi
+[[test.validator.clone]]
+address = "YiiTopEnX2vyoWdXuG45ovDFYZars4XZ4w6td6RVTFm" # YiProgram
