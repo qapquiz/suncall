@@ -10,8 +10,8 @@ pub struct Initialize<'info> {
         payer = owner,
         space = Lotto::LEN,
         seeds = [
-            "lotto".as_bytes(),
             owner.key().as_ref(),
+            "lotto".as_bytes(),
         ],
         bump,
     )]
@@ -30,8 +30,8 @@ pub struct Initialize<'info> {
         payer = owner,
         space = LottoState::LEN,
         seeds = [
-            "lotto_state".as_bytes(),
             lotto.key().as_ref(),
+            "lotto_state".as_bytes(),
         ],
         bump,
     )]
