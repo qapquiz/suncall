@@ -31,7 +31,7 @@ pub struct Initialize<'info> {
         space = LottoState::LEN,
         seeds = [
             lotto.key().as_ref(),
-            "lotto_state".as_bytes(),
+            "state".as_bytes(),
         ],
         bump,
     )]
@@ -61,7 +61,7 @@ pub struct Initialize<'info> {
 }
 
 impl<'info> Initialize<'info> {
-    pub fn validate(&self) -> Result<()> {
+    pub fn validate(_ctx: &Context<Initialize>) -> Result<()> {
         Ok(())
     }
 }

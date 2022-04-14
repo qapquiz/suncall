@@ -14,11 +14,11 @@ describe("suncall", () => {
     mint: new anchor.web3.PublicKey("6XyygxFmUeemaTvA9E9mhH9FvgpynZqARVyG3gUdCMt7"),
   };
   
-  it("Is initialized!", async () => {
+  it("should initialize", async () => {
     const [lottoPda] = await anchor.web3.PublicKey.findProgramAddress(
       [
-        Buffer.from("lotto"),
         provider.wallet.publicKey.toBuffer(),
+        Buffer.from("lotto"),
       ],
       program.programId,
     );

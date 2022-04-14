@@ -1,7 +1,7 @@
 [features]
-seeds = true 
+seeds = true
 [programs.localnet]
-suncall = "GaGdcADMhbCFCigsyMTRLUj2P876wCD1RqDCNvLrE7fh"
+suncall = "7BmTamq2R1kVjrtv52Yivik5MXrKrseesMsbqK2heWqL"
 
 [registry]
 url = "https://anchor.projectserum.com"
