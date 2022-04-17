@@ -5,6 +5,7 @@ pub struct LottoState {
     pub total_yi_underlying_deposit: u64,
     pub total_yi_deposit: u64,
     pub round: u64,
+    pub user_ledgers_len: u64,
 }
 
 impl LottoState {
@@ -12,6 +13,7 @@ impl LottoState {
         8 + // discriminator
         8 + // total_underlying_deposit
         8 + // total_yi_deposit
-        8 // round
+        8 + // round
+        8 // user_ledgers_len
         ;
 }

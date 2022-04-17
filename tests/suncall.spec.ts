@@ -13,11 +13,14 @@ describe("suncall", () => {
     underlyingMint: new anchor.web3.PublicKey("5fjG31cbSszE6FodW37UJnNzgVTyqg5WHWGCmL3ayAvA"),
     mint: new anchor.web3.PublicKey("6XyygxFmUeemaTvA9E9mhH9FvgpynZqARVyG3gUdCMt7"),
   };
+
+  const poolName = "solust_pool";
   
   it("should initialize", async () => {
     const [lottoPda] = await anchor.web3.PublicKey.findProgramAddress(
       [
         provider.wallet.publicKey.toBuffer(),
+        Buffer.from(poolName),
         Buffer.from("lotto"),
       ],
       program.programId,
@@ -37,7 +40,9 @@ describe("suncall", () => {
       mint: yi.mint,
       owner: lottoAuthorityPda,
     });
-    const tx = await program.methods.initialize()
+    const tx = await program.methods.initialize(
+        poolName
+      )
       .accounts({
         lottoYiUnderlyingAta: lottoYiUnderlyingAta,
         lottoYiAta: lottoYiAta,
@@ -47,5 +52,43 @@ describe("suncall", () => {
       })
       .rpc();
     console.log("Your transaction signature", tx);
+  });
+
+  it("should user ledger initialize", async () => {
+    const [lottoPda] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        provider.wallet.publicKey.toBuffer(),
+        Buffer.from(poolName),
+        Buffer.from("lotto"),
+      ],
+      program.programId,
+    );
+
+    const tx = await program.methods.userLedgerReferenceInitialize()
+      .accounts({
+        lotto: lottoPda,
+        user: provider.wallet.publicKey,
+      })
+      .rpc();
+    console.log("User ledger reference initialize", tx);
+  });
+
+  it("should deposit initialize", async () => {
+    const [lottoPda] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        provider.wallet.publicKey.toBuffer(),
+        Buffer.from(poolName),
+        Buffer.from("lotto"),
+      ],
+      program.programId,
+    );
+
+    const tx = await program.methods.depositInitialize()
+      .accounts({
+        lotto: lottoPda,
+        user: provider.wallet.publicKey,
+      })
+      .rpc();
+    console.log("Deposit initialize", tx);
   });
 });

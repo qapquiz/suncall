@@ -4,6 +4,7 @@ use anchor_spl::{token::{Mint, TokenAccount, Token}, associated_token::Associate
 use crate::states::{Lotto, LottoState};
 
 #[derive(Accounts)]
+#[instruction(name: String)]
 pub struct Initialize<'info> {
     #[account(
         init,
@@ -11,6 +12,7 @@ pub struct Initialize<'info> {
         space = Lotto::LEN,
         seeds = [
             owner.key().as_ref(),
+            name.as_bytes(),
             "lotto".as_bytes(),
         ],
         bump,
@@ -66,7 +68,7 @@ impl<'info> Initialize<'info> {
     }
 }
 
-pub fn handler(ctx: Context<Initialize>) -> Result<()> {
+pub fn handler(ctx: Context<Initialize>, name: String) -> Result<()> {
     let owner_pubkey = ctx.accounts.owner.key();
     let yi_underlying_mint_pubkey = ctx.accounts.yi_underlying_mint.key();
     let yi_mint_pubkey = ctx.accounts.yi_mint.key();
@@ -80,6 +82,7 @@ pub fn handler(ctx: Context<Initialize>) -> Result<()> {
     lotto_state.total_yi_underlying_deposit = 0;
     lotto_state.total_yi_deposit = 0;
     lotto_state.round = 1;
+    lotto_state.user_ledgers_len = 0;
 
     Ok(())
 }
