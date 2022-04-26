@@ -25,9 +25,9 @@ pub mod suncall {
         instructions::deposit_initialize::handler(ctx)
     }
 
-    #[access_control(Deposit::validate(&ctx))]
-    pub fn deposit(ctx: Context<Deposit>) -> Result<()> {
-        instructions::deposit::handler(ctx)
+    #[access_control(Deposit::validate(&ctx, amount))]
+    pub fn deposit(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+        instructions::deposit::handler(ctx, amount)
     }
 
     #[access_control(Withdraw::validate(&ctx))]

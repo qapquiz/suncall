@@ -10,6 +10,7 @@ describe("suncall", () => {
   const provider = program.provider as anchor.AnchorProvider;
   
   const yi = {
+    token: new anchor.web3.PublicKey("8yazwmgc66uKrDBy3TZpNCgLa8qUDcuH8PZCz9jy6dzd"),
     underlyingMint: new anchor.web3.PublicKey("5fjG31cbSszE6FodW37UJnNzgVTyqg5WHWGCmL3ayAvA"),
     mint: new anchor.web3.PublicKey("6XyygxFmUeemaTvA9E9mhH9FvgpynZqARVyG3gUdCMt7"),
   };
@@ -46,6 +47,7 @@ describe("suncall", () => {
       .accounts({
         lottoYiUnderlyingAta: lottoYiUnderlyingAta,
         lottoYiAta: lottoYiAta,
+        yiToken: yi.token,
         yiUnderlyingMint: yi.underlyingMint,
         yiMint: yi.mint,
         owner: provider.wallet.publicKey,
@@ -54,7 +56,7 @@ describe("suncall", () => {
     console.log("Your transaction signature", tx);
   });
 
-  it("should user ledger initialize", async () => {
+  it("should user ledger reference initialize", async () => {
     const [lottoPda] = await anchor.web3.PublicKey.findProgramAddress(
       [
         provider.wallet.publicKey.toBuffer(),

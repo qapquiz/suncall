@@ -9,7 +9,7 @@ pub struct DepositInitialize<'info> {
         seeds = [
             lotto.key().as_ref(),
             user.key().as_ref(),
-            "ledger".as_ref(),
+            "ledger".as_bytes(),
         ],
         bump,
     )]
@@ -41,5 +41,6 @@ pub fn handler(ctx: Context<DepositInitialize>) -> Result<()> {
     let user_ledger = &mut ctx.accounts.user_ledger;
     user_ledger.owner = user.key();
     user_ledger.total_yi_underlying_deposit = 0;
+    user_ledger.total_yi_deposit = 0;
     Ok(())
 }

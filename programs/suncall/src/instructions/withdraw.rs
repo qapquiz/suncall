@@ -13,6 +13,6 @@ impl<'info> Withdraw<'info> {
     }
 }
 
-pub fn handler(ctx: Context<Withdraw>) -> Result<()> {
+pub fn handler(_ctx: Context<Withdraw>) -> Result<()> {
     Ok(())
 }

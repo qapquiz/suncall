@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{token::{Mint, TokenAccount, Token}, associated_token::AssociatedToken};
+use yi::YiToken;
 
 use crate::states::{Lotto, LottoState};
 
@@ -21,7 +22,7 @@ pub struct Initialize<'info> {
     #[account(
         seeds = [
             lotto.key().as_ref(),
-            "authority".as_ref(),
+            "authority".as_bytes(),
         ],
         bump
     )]
@@ -52,6 +53,7 @@ pub struct Initialize<'info> {
         associated_token::authority = lotto_authority,
     )]
     pub lotto_yi_ata: Box<Account<'info, TokenAccount>>,
+    pub yi_token: AccountLoader<'info, YiToken>,
     pub yi_underlying_mint: Box<Account<'info, Mint>>,
     pub yi_mint: Box<Account<'info, Mint>>,
     #[account(mut)]
@@ -68,13 +70,16 @@ impl<'info> Initialize<'info> {
     }
 }
 
-pub fn handler(ctx: Context<Initialize>, name: String) -> Result<()> {
+pub fn handler(ctx: Context<Initialize>, _name: String) -> Result<()> {
     let owner_pubkey = ctx.accounts.owner.key();
+    let yi_token_pubkey = ctx.accounts.yi_token.key();
     let yi_underlying_mint_pubkey = ctx.accounts.yi_underlying_mint.key();
     let yi_mint_pubkey = ctx.accounts.yi_mint.key();
 
     let lotto = &mut ctx.accounts.lotto;
     lotto.owner = owner_pubkey;
+    lotto.yi_program = yi::id();
+    lotto.yi_token = yi_token_pubkey;
     lotto.yi_underlying_mint = yi_underlying_mint_pubkey;
     lotto.yi_mint = yi_mint_pubkey;
 
