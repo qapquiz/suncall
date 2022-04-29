@@ -31,7 +31,7 @@ pub mod suncall {
     }
 
     #[access_control(Withdraw::validate(&ctx))]
-    pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
-        instructions::withdraw::handler(ctx)
+    pub fn withdraw(ctx: Context<Withdraw>, underlying_amount: u64) -> Result<()> {
+        instructions::withdraw::handler(ctx, underlying_amount)
     }
 }

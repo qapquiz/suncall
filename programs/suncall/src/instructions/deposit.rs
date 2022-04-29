@@ -17,6 +17,7 @@ pub struct Deposit<'info> {
     /// CHECK: authority of the [lotto]
     pub lotto_authority: AccountInfo<'info>,
     #[account(
+        mut,
         seeds = [
             lotto.key().as_ref(),
             "state".as_bytes(),
@@ -25,11 +26,13 @@ pub struct Deposit<'info> {
     )]
     pub lotto_state: Box<Account<'info, LottoState>>,
     #[account(
+        mut,
         associated_token::mint = yi_underlying_mint,
         associated_token::authority = lotto_authority,
     )]
     pub lotto_yi_underlying_ata: Box<Account<'info, TokenAccount>>,
     #[account(
+        mut,
         associated_token::mint = yi_mint,
         associated_token::authority = lotto_authority,
     )]
@@ -44,6 +47,7 @@ pub struct Deposit<'info> {
     )]
     pub user_ledger_reference: Box<Account<'info, UserLedgerReference>>,
     #[account(
+        mut,
         seeds = [
             lotto.key().as_ref(),
             user_ledger_reference.array_index.to_le_bytes().as_ref(),
@@ -56,21 +60,16 @@ pub struct Deposit<'info> {
     )]
     pub yi_underlying_mint: Box<Account<'info, Mint>>,
     #[account(
+        mut,
         address = lotto.yi_mint,
     )]
     pub yi_mint: Box<Account<'info, Mint>>,
     #[account(
+        mut,
         associated_token::mint = yi_underlying_mint,
         associated_token::authority = user,
     )]
     pub user_yi_underlying_ata: Box<Account<'info, TokenAccount>>,
-    #[account(
-        init_if_needed,
-        payer = user,
-        associated_token::mint = yi_mint,
-        associated_token::authority = user,
-    )]
-    pub user_yi_ata: Box<Account<'info, TokenAccount>>,
     #[account(
         address = lotto.yi_program,
     )]
@@ -99,6 +98,25 @@ impl<'info> Deposit<'info> {
         Ok(())
     }
 
+    pub fn transfer_from_user_to_platform(&self, amount: u64, lotto_authority_bump: u8) -> Result<()> {
+        let lotto_key = self.lotto.to_account_info().key();
+
+        let cpi_program = self.token_program.to_account_info();
+        let cpi_accounts = anchor_spl::token::Transfer {
+            from: self.user_yi_underlying_ata.to_account_info(),
+            to: self.lotto_yi_underlying_ata.to_account_info(),
+            authority: self.lotto_authority.to_account_info(),
+        };
+        let signer_seeds: &[&[&[u8]]] = &[&[lotto_key.as_ref(), "authority".as_bytes(), &[lotto_authority_bump]]];
+        let cpi_context = CpiContext::new_with_signer(
+            cpi_program,
+            cpi_accounts,
+            signer_seeds,
+        );
+
+        anchor_spl::token::transfer(cpi_context, amount)
+    }
+
     pub fn yi_stake(&self, amount: u64, lotto_authority_bump: u8) -> Result<()> {
         let lotto_key = self.lotto.to_account_info().key();
 
@@ -125,9 +143,12 @@ impl<'info> Deposit<'info> {
 }
 
 pub fn handler(ctx: Context<Deposit>, amount: u64) -> Result<()> {
+    let lotto_authority_bump = *ctx.bumps.get("lotto_authority").unwrap();
+
+    ctx.accounts.transfer_from_user_to_platform(amount, lotto_authority_bump)?;
+
     let lotto_yi_amount_before_deposit = ctx.accounts.lotto_yi_ata.amount;
 
-    let lotto_authority_bump = *ctx.bumps.get("lotto_authority").unwrap();
     ctx.accounts.yi_stake(amount, lotto_authority_bump)?;
 
     // reload account to set the lamport after the stake
